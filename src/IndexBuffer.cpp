@@ -7,8 +7,8 @@ IndexBuffer::IndexBuffer(unsigned int* data, unsigned int count)
 {
 	ASSERT(sizeof(unsigned int) == sizeof(GLuint));
 
-	indices = new unsigned int[36];
-	for(int i = 0; i < 36; i++)
+	indices = new unsigned int[count];
+	for(int i = 0; i < count; i++)
 		indices[i] = data[i];
 	 
 	GLCall(glGenBuffers(1, &m_RendererID));
