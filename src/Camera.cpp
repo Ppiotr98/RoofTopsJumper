@@ -75,10 +75,10 @@ void Camera::move(const int direction)
 	switch (direction)
 	{
 	case FORWARD:
-		this->position += this->front * this->movementSpeed;
+		this->position += this->front * glm::vec3(1.0f, 0.0f, 1.0f) * this->movementSpeed;
 		break;
 	case BACKWARD:
-		this->position -= this->front * this->movementSpeed;
+		this->position -= this->front * glm::vec3(1.0f, 0.0f, 1.0f) * this->movementSpeed;
 		break;
 	case LEFT:
 		this->position -= this->right * this->movementSpeed;
@@ -97,13 +97,18 @@ void Camera::updateMouseInput(const double& offsetX, const double& offsetY)
 	this->rotationX += static_cast<GLfloat>(offsetY) * this->sensitivity;
 	this->rotationY += static_cast<GLfloat>(offsetX) * this->sensitivity;
 
-	if (this->rotationX > 90.0f)
-		this->rotationX = 90.0f;
-	else if (this->rotationX < -90.0f)
-		this->rotationX = -90.0f;
+	if (this->rotationX > 80.0f)
+		this->rotationX = 80.0f;
+	else if (this->rotationX < -80.0f)
+		this->rotationX = -80.0f;
 
-	if (this->rotationY > 360.0f || this->rotationY < -360.0f)
-		this->rotationY = 0.0f;
+	if (this->rotationY > 80.0f)
+		this->rotationY = 80.0f;
+	else if (this->rotationY < -80.0f)
+		this->rotationY = -80.0f;
+
+//	if (this->rotationY > 360.0f || this->rotationY < -360.0f)
+//		this->rotationY = 0.0f;
 }
 
 void Camera::updateInput(const int direction, const double& offsetX, const double& offsetY)
