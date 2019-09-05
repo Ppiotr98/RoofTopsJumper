@@ -37,6 +37,9 @@ public:
 	const glm::mat4 getViewMatrix();
 	const glm::vec3 getPosition() const;
 	const glm::vec3 getRotation() const;
+	const glm::vec3 getFront() const;
+	const glm::vec3 getRight() const;
+	const float getMovementSpeed() const;
 	void setPosition(glm::vec3 position);
 
 	//Functions
