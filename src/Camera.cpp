@@ -49,6 +49,21 @@ const glm::vec3 Camera::getRotation() const
 	return glm::vec3(rotationX, rotationY, rotationDis);
 }
 
+const glm::vec3 Camera::getFront() const
+{
+	return front;
+}
+
+const glm::vec3 Camera::getRight() const
+{
+	return right;
+}
+
+const float Camera::getMovementSpeed() const
+{
+	return movementSpeed;
+}
+
 void Camera::setPosition(glm::vec3 newPosition)
 {
 	this->position = newPosition;

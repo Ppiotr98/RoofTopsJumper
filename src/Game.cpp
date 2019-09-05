@@ -7,12 +7,15 @@
 #include "tinyobjloader-2.0-rc1/tiny_obj_loader.h"
 
 Game::Game()
-	: camera(glm::vec3(-2478.48f, 550.774f, 57.4234f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
+	//: camera(glm::vec3(-2478.48f, 550.774f, 57.4234f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
+	: camera(glm::vec3(-2476.39f, 440.31f, 70.2338f), glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 1.f, 0.f))
 {
+//	-2478.48f, 439.474f, 70.4234f
+//	-2.09f, -0.836f, 0.1896f
 	camFront = glm::vec3(0.f, 0.f, -1.f);
 	fov = 90.0f;
 	nearPlane = 0.1f;
-	farPlane = 5000.f;
+	farPlane = 500.f;
 
 	firstMouse = true;
 
@@ -20,24 +23,32 @@ Game::Game()
 	GLCall(glEnable(GL_DEPTH_TEST));
 	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
-	m_VAO = new VertexArray;
+	BuildingsVertexBuffer = new VertexBuffer("res/models/buildings/buildings.obj");
+	BuildingsVerticesCount = BuildingsVertexBuffer->m_vertices.size() / 5;
+	
+	VertexBufferLayout BuildingsVertexLayout;
+	BuildingsVertexLayout.Push<float>(3);
+	BuildingsVertexLayout.Push<float>(2);
 
-	m_VertexBuffer = new VertexBuffer("res/models/buildings/buildings.obj");
-	verticesCount = m_VertexBuffer->m_vertices.size() / 5;
-	
-	VertexBufferLayout VertexLayout;
-	VertexLayout.Push<float>(3);
-	VertexLayout.Push<float>(2);
-	//VertexLayout.Push<float>(3);
-	
-	m_VAO->AddBuffer(m_VertexBuffer, &VertexLayout);
+	BuildingsVertexArray = new VertexArray;
+	BuildingsVertexArray->AddBuffer(BuildingsVertexBuffer, &BuildingsVertexLayout);
 	
 	m_Shader = new Shader("res/shaders/Basic.shader");
 	m_Shader->Bind();
 	m_Shader->SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
-	m_Texture1 = std::make_unique<Texture>("res/textures/kamienie.jpg");
-	m_Texture2 = std::make_unique<Texture>("res/textures/tlo.jpg");
+	BuildingsTexture = std::make_unique<Texture>("res/textures/roof.jpg");
 
+	CharacterVertexBuffer = new VertexBuffer("res/models/finn.obj");
+	CharacterVerticesCount = CharacterVertexBuffer->m_vertices.size() / 5;
+
+	VertexBufferLayout CharacterVertexLayout;
+	CharacterVertexLayout.Push<float>(3);
+	CharacterVertexLayout.Push<float>(2);
+
+	CharacterVertexArray = new VertexArray;
+	CharacterVertexArray->AddBuffer(CharacterVertexBuffer, &CharacterVertexLayout);
+
+	CharacterTexture = std::make_unique<Texture>("res/textures/tlo.jpg");
 }
 Game::~Game()
 {	
@@ -58,30 +69,29 @@ void Game::OnRender()
 		nearPlane, farPlane);
 	glm::mat4 mvp1 = projection1 * view1 * model1;
 
-	m_Texture1->Bind(0);
+	BuildingsTexture->Bind(0);
 	m_Shader->SetUniform1i("u_Texture", 0);
-	m_Shader->Bind();
 	m_Shader->SetUniformMath4f("u_MVP", mvp1);
 
-	renderer.Draw(m_VAO, m_Shader, verticesCount);
+	renderer.Draw(BuildingsVertexArray, m_Shader, BuildingsVerticesCount);
 
 
-//	glm::mat4 model2 = glm::scale(glm::mat4(1.0f), glm::vec3(0.02f, 0.02f, 0.02f));
-//	glm::mat4 view2 = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -0.2f));
-//	glm::mat4 projection2 = glm::mat4(1.0f);
-//	projection2 = glm::perspective(
-//		glm::radians(90.0f),
-//		800.0f / 600.0f,
-//		0.1f, 100.0f);
-//	glm::mat4 mvp2 = projection2 * view2 * model2;
-//	
-//	m_Texture2->Bind(0);
-//	m_Shader->SetUniform1i("u_Texture", 0);
-//	m_Shader->Bind();
-//	m_Shader->SetUniformMath4f("u_MVP", mvp2);
-//	
-//	m_VAO->Bind();
-//	glDrawArrays(GL_TRIANGLES, 0, verticesCount);
+	glm::mat4 model2 = glm::translate(glm::mat4(1.0f), camera.getPosition() + glm::vec3(-2.09f, -0.836f, 0.1896f));
+	model2 = glm::scale(model2, glm::vec3(0.02f, 0.02f, 0.02f));
+	model2 = glm::rotate(model2, 1.57f, glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 view2 = camera.getViewMatrix();
+	glm::mat4 projection2 = glm::mat4(1.0f);
+	projection2 = glm::perspective(
+		glm::radians(fov),
+		800.0f / 600.0f,
+		nearPlane, farPlane);
+	glm::mat4 mvp2 = projection2 * view2 * model2;
+	
+	CharacterTexture->Bind(0);
+	m_Shader->SetUniform1i("u_Texture", 0);
+	m_Shader->SetUniformMath4f("u_MVP", mvp2);
+
+	renderer.Draw(CharacterVertexArray, m_Shader, CharacterVerticesCount);
 }
 void Game::Events(GLFWwindow* window)
 {
@@ -90,30 +100,38 @@ void Game::Events(GLFWwindow* window)
 	camera.updateInput(-1, mouseOffsetX, mouseOffsetY);
 }
 void Game::KeyboardEvents(GLFWwindow* window)
-{
+{	
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		camera.move(FORWARD);
-		if(CheckForCollisions())
+		if (CheckForCollisions())
+		{
 			camera.move(BACKWARD);
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
 		camera.move(BACKWARD);
 		if (CheckForCollisions())
+		{
 			camera.move(FORWARD);
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		camera.move(LEFT);
 		if (CheckForCollisions())
+		{
 			camera.move(RIGHT);
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
 		camera.move(RIGHT);
 		if (CheckForCollisions())
+		{
 			camera.move(LEFT);
+		}
 	}
 }
 void Game::MouseEvents(GLFWwindow* window)

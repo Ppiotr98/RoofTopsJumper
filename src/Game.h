@@ -16,14 +16,16 @@ public:
 	void MouseEvents(GLFWwindow* window);
 	bool CheckForCollisions();
 private:
-	VertexArray* m_VAO;
-	VertexBuffer* m_VertexBuffer;
-	std::unique_ptr<Shader> m_IndexBuffer;
+	VertexArray* BuildingsVertexArray;
+	VertexArray* CharacterVertexArray;
+	VertexBuffer* BuildingsVertexBuffer;
+	VertexBuffer* CharacterVertexBuffer;
 	Shader* m_Shader;
-	std::unique_ptr<Texture> m_Texture1;
-	std::unique_ptr<Texture> m_Texture2;
+	std::unique_ptr<Texture> BuildingsTexture;
+	std::unique_ptr<Texture> CharacterTexture;
 
-	unsigned int verticesCount;
+	unsigned int BuildingsVerticesCount;
+	unsigned int CharacterVerticesCount;
 
 	double lastMouseX = 0.0;
 	double lastMouseY = 0.0;
