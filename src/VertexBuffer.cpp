@@ -30,8 +30,6 @@ VertexBuffer::VertexBuffer(string path)
 		exit(1);
 	}
 
-	vector <float> positions;
-
 	// Loop over shapes
 	for (size_t s = 0; s < shapes.size(); s++) {
 		// Loop over faces(polygon)
@@ -43,11 +41,11 @@ VertexBuffer::VertexBuffer(string path)
 			for (size_t v = 0; v < fv; v++) {
 				// access to vertex
 				tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-				positions.push_back(attrib.vertices[3 * idx.vertex_index + 0]);
-				positions.push_back(attrib.vertices[3 * idx.vertex_index + 1]);
-				positions.push_back(attrib.vertices[3 * idx.vertex_index + 2]);
-				positions.push_back(attrib.texcoords[2 * idx.texcoord_index + 0]);
-				positions.push_back(attrib.texcoords[2 * idx.texcoord_index + 1]);
+				m_vertices.push_back(attrib.vertices[3 * idx.vertex_index + 0]);
+				m_vertices.push_back(attrib.vertices[3 * idx.vertex_index + 1]);
+				m_vertices.push_back(attrib.vertices[3 * idx.vertex_index + 2]);
+				m_vertices.push_back(attrib.texcoords[2 * idx.texcoord_index + 0]);
+				m_vertices.push_back(attrib.texcoords[2 * idx.texcoord_index + 1]);
 			}
 			index_offset += fv;
 
@@ -56,9 +54,9 @@ VertexBuffer::VertexBuffer(string path)
 		}
 	}
 
-	GLCall(glGenBuffers(1, &m_RendererID));
-	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
-	GLCall(glBufferData(GL_ARRAY_BUFFER, positions.size() / 5, &positions[0], GL_STATIC_DRAW));
+	glGenBuffers(1, &m_RendererID);
+	glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+	glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(float), &m_vertices[0], GL_STATIC_DRAW);
 }
 VertexBuffer::~VertexBuffer()
 {
