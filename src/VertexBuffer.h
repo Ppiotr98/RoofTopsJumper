@@ -16,6 +16,9 @@ class VertexBuffer
 
 public:
 	GLuint m_RendererID;
+
+	vector <float> m_vertices;
+
 	VertexBuffer(string path);
 	~VertexBuffer();
 
