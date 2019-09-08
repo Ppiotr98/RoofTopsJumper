@@ -36,17 +36,17 @@ int main()
 	GLFWwindow* window = initWindow();
 
 	{
-		Renderer renderer;
+		Renderer* renderer = new Renderer;
 
 		Game game;
 
 		while (!glfwWindowShouldClose(window))
 		{
 			GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-			renderer.Clear();
+			renderer->Clear();
 
 			game.OnUpdate(0.0f);
-			game.OnRender();
+			game.OnRender(renderer);
 			game.Events(window);
 
 			glfwSwapBuffers(window);
