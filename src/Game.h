@@ -2,6 +2,7 @@
 
 #include "Texture.h"
 #include "Camera.h"
+#include "map.h"
 
 class Game
 {
@@ -10,7 +11,7 @@ public:
 	~Game();
 
 	void OnUpdate(float deltaTime);
-	void OnRender();
+	void OnRender(Renderer* renderer);
 	void Events(GLFWwindow* window);
 	void KeyboardEvents(GLFWwindow* window);
 	void MouseEvents(GLFWwindow* window);
@@ -35,7 +36,7 @@ private:
 	double mouseOffsetY = 0.0;
 	bool firstMouse = true;
 
-	Camera camera;
+	Camera* camera;
 
 	glm::vec3 camPosition;
 	glm::vec3 worldUp;
@@ -46,4 +47,7 @@ private:
 	float farPlane = 1000.f;
 
 	vector <unsigned int> directions;
+	vector <glm::vec3> buildingsTranslations;
+
+	Map* map;
 };
