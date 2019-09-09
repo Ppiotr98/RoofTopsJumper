@@ -59,19 +59,20 @@ vector <glm::vec3> Map::createTranslations()
 			break;
 		}
 
-	//	unsigned int currentHighDirection = rand() % 3;
-	//	static unsigned int highJump = 30;
-	//	switch (currentHighDirection)
-	//	{
-	//	case 0: //down
-	//		currentTranslation.y -= highJump;
-	//		break;
-	//	case 1: //sameLevel
-	//		break;
-	//	case 2: //up
-	//		currentTranslation.y += highJump;
-	//		break;
-	//	}
+		unsigned int currentHighDirection = rand() % 3;
+		static unsigned int highJump = 30;
+		switch (currentHighDirection)
+		{
+		case 0: //down
+			if(currentTranslation.y > -600)
+				currentTranslation.y -= highJump;
+			break;
+		case 1: //sameLevel
+			break;
+		case 2: //up
+			currentTranslation.y += highJump;
+			break;
+		}
 
 		buildingsTranslations.push_back(currentTranslation);
 		lastDirection_2 = lastDirection_1;

@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "Camera.h"
 #include "map.h"
+#include "character.h"
 
 class Game
 {
@@ -17,16 +18,9 @@ public:
 	void MouseEvents(GLFWwindow* window);
 	bool CheckForCollisions();
 private:
-	VertexArray* BuildingsVertexArray;
-	VertexArray* CharacterVertexArray;
-	VertexBuffer* BuildingsVertexBuffer;
-	VertexBuffer* CharacterVertexBuffer;
 	Shader* m_Shader;
-	std::unique_ptr<Texture> BuildingsTexture;
-	std::unique_ptr<Texture> CharacterTexture;
 
-	unsigned int BuildingsVerticesCount;
-	unsigned int CharacterVerticesCount;
+	Camera* camera;
 
 	double lastMouseX = 0.0;
 	double lastMouseY = 0.0;
@@ -36,8 +30,6 @@ private:
 	double mouseOffsetY = 0.0;
 	bool firstMouse = true;
 
-	Camera* camera;
-
 	glm::vec3 camPosition;
 	glm::vec3 worldUp;
 	glm::vec3 camFront;
@@ -46,8 +38,6 @@ private:
 	float nearPlane = 0.1f;
 	float farPlane = 1000.f;
 
-	vector <unsigned int> directions;
-	vector <glm::vec3> buildingsTranslations;
-
 	Map* map;
+	Character* character;
 };

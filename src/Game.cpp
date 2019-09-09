@@ -21,19 +21,8 @@ Game::Game()
 	m_Shader->Bind();
 	m_Shader->SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 
-	CharacterVertexBuffer = new VertexBuffer("res/models/finn.obj");
-	CharacterVerticesCount = CharacterVertexBuffer->m_vertices.size() / 5;
-
-	VertexBufferLayout CharacterVertexLayout;
-	CharacterVertexLayout.Push<float>(3);
-	CharacterVertexLayout.Push<float>(2);
-
-	CharacterVertexArray = new VertexArray;
-	CharacterVertexArray->AddBuffer(CharacterVertexBuffer, &CharacterVertexLayout);
-
-	CharacterTexture = std::make_unique<Texture>("res/textures/tlo.jpg");
-
 	map = new Map("res/models/buildings/buildings.obj", "res/textures/buildingTexture.jpg");
+	character = new Character("res/models/finn.obj", "res/textures/tlo.jpg");
 }
 Game::~Game()
 {	
@@ -44,26 +33,7 @@ void Game::OnUpdate(float deltaTime)
 void Game::OnRender(Renderer* renderer)
 {
 	map->draw(camera, m_Shader, renderer, fov, nearPlane, farPlane);
-
-	float distance = -2.5f;
-	float dz = distance * sin(glm::radians(camera->getRotation().y));
-	float dx = distance * (cos(glm::radians(camera->getRotation().y)) - 1);
-	glm::mat4 model2 = glm::translate(glm::mat4(1.0f), camera->getPosition() + glm::vec3(distance + dx, -0.836f, dz));
-	model2 = glm::scale(model2, glm::vec3(0.02f, 0.02f, 0.02f));
-	model2 = glm::rotate(model2, 1.57f - glm::radians(camera->getRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 view2 = camera->getViewMatrix();
-	glm::mat4 projection2 = glm::mat4(1.0f);
-	projection2 = glm::perspective(
-		glm::radians(fov),
-		1920.0f / 1080.0f,
-		nearPlane, farPlane);
-	glm::mat4 mvp2 = projection2 * view2 * model2;
-	
-	CharacterTexture->Bind(0);
-	m_Shader->SetUniform1i("u_Texture", 0);
-	m_Shader->SetUniformMath4f("u_MVP", mvp2);
-
-	renderer->Draw(CharacterVertexArray, m_Shader, CharacterVerticesCount);
+	character->draw(camera, m_Shader, renderer, fov, nearPlane, farPlane);
 }
 void Game::Events(GLFWwindow* window)
 {
