@@ -37,3 +37,13 @@ bool Collision::isCollision()
 	}
 	return false;
 }
+
+void Collision::updateAreas1(std::vector<glm::vec3> newAreas)
+{
+	areas1 = newAreas;
+}
+
+void Collision::updateAreas2(std::vector<glm::vec3> newAreas)
+{
+	areas2 = newAreas;
+}

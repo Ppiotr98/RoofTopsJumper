@@ -24,6 +24,9 @@ Game::Game()
 
 	map = new Map("res/models/buildings/buildings.obj", "res/textures/buildingTexture.jpg");
 	character = new Character("res/models/finn.obj", "res/textures/tlo.jpg", camera);
+	gravity = new Gravity(0.01f);
+
+	collision = new Collision(map->getAreas(), character->getAreas());
 }
 Game::~Game()
 {	
@@ -40,6 +43,7 @@ void Game::Events(GLFWwindow* window)
 {
 	KeyboardEvents(window);
 	MouseEvents(window);
+	gravity->characterFollDown(camera, character, collision);
 	camera->updateInput(-1, mouseOffsetX, mouseOffsetY);
 }
 void Game::KeyboardEvents(GLFWwindow* window)
@@ -47,8 +51,8 @@ void Game::KeyboardEvents(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		camera->move(FORWARD);
-		Collision collision(map->getAreas(), character->getAreas());
-		if (collision.isCollision())
+		collision->updateAreas2(character->getAreas());
+		if (collision->isCollision())
 		{
 			camera->move(BACKWARD);
 		}
@@ -56,8 +60,8 @@ void Game::KeyboardEvents(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
 		camera->move(BACKWARD);
-		Collision collision(map->getAreas(), character->getAreas());
-		if (collision.isCollision())
+		collision->updateAreas2(character->getAreas());
+		if (collision->isCollision())
 		{
 			camera->move(FORWARD);
 		}
@@ -65,8 +69,8 @@ void Game::KeyboardEvents(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		camera->move(LEFT);
-		Collision collision(map->getAreas(), character->getAreas());
-		if (collision.isCollision())
+		collision->updateAreas2(character->getAreas());
+		if (collision->isCollision())
 		{
 			camera->move(RIGHT);
 		}
@@ -74,8 +78,8 @@ void Game::KeyboardEvents(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
 		camera->move(RIGHT);
-		Collision collision(map->getAreas(), character->getAreas());
-		if (collision.isCollision())
+		collision->updateAreas2(character->getAreas());
+		if (collision->isCollision())
 		{
 			camera->move(LEFT);
 		}
