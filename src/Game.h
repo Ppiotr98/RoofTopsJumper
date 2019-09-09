@@ -16,7 +16,6 @@ public:
 	void Events(GLFWwindow* window);
 	void KeyboardEvents(GLFWwindow* window);
 	void MouseEvents(GLFWwindow* window);
-	bool CheckForCollisions();
 private:
 	Shader* m_Shader;
 

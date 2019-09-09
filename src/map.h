@@ -14,6 +14,7 @@ public:
 
 	vector <glm::vec3> createTranslations();
 	void draw(Camera* camera, Shader* shader, Renderer* renderer, float fov, float nearPlane, float farPlane);
+	std::vector <glm::vec3> getAreas();
 private:
 	VertexArray* BuildingsVertexArray;
 	VertexBuffer* BuildingsVertexBuffer;

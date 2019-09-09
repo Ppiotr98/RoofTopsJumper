@@ -9,14 +9,16 @@
 class Character
 {
 public:
-	Character(string path, string texturePath);
+	Character(string path, string texturePath, Camera* m_Camera);
 	~Character();
 
-	void draw(Camera* camera, Shader* shader, Renderer* renderer, float fov, float nearPlane, float farPlane);
+	void draw(Shader* shader, Renderer* renderer, float fov, float nearPlane, float farPlane);
+	std::vector <glm::vec3> getAreas();
 private:
 	VertexArray* characterVertexArray;
 	VertexBuffer* characterVertexBuffer;
 	std::unique_ptr<Texture> characterTexture;
-
 	unsigned int characterVerticesCount;
+
+	Camera* camera;
 };

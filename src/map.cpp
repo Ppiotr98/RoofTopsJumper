@@ -106,3 +106,14 @@ void Map::draw(Camera* camera, Shader* shader, Renderer* renderer, float fov, fl
 		renderer->Draw(BuildingsVertexArray, shader, BuildingsVerticesCount);
 	}
 }
+
+std::vector<glm::vec3> Map::getAreas()
+{
+	std::vector<glm::vec3> ans;
+	for (int i = 0; i < buildingsTranslations.size(); i++)
+	{
+		ans.push_back(buildingsTranslations[i] - glm::vec3(150.0f, 400.0f, 150.0f));
+		ans.push_back(buildingsTranslations[i] + glm::vec3(150.0f, 400.0f, 150.0f));
+	}
+	return ans;
+}
