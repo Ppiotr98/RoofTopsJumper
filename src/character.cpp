@@ -3,7 +3,7 @@
 
 #include <ctime>
 
-Character::Character(string modelPath, string texturePath)
+Character::Character(string modelPath, string texturePath, Camera* m_Camera)
 {
 	GLCall(glEnable(GL_BLEND));
 	GLCall(glEnable(GL_DEPTH_TEST));
@@ -20,13 +20,15 @@ Character::Character(string modelPath, string texturePath)
 	characterVertexArray->AddBuffer(characterVertexBuffer, &characterVertexLayout);
 
 	characterTexture = std::make_unique<Texture>(texturePath);
+
+	camera = m_Camera;
 }
 
 Character::~Character()
 {
 }
 
-void Character::draw(Camera* camera, Shader* shader, Renderer* renderer, float fov, float nearPlane, float farPlane)
+void Character::draw(Shader* shader, Renderer* renderer, float fov, float nearPlane, float farPlane)
 {
 	float distance = -2.5f;
 	float dz = distance * sin(glm::radians(camera->getRotation().y));
@@ -47,4 +49,12 @@ void Character::draw(Camera* camera, Shader* shader, Renderer* renderer, float f
 	shader->SetUniformMath4f("u_MVP", mvp2);
 
 	renderer->Draw(characterVertexArray, shader, characterVerticesCount);
+}
+
+std::vector <glm::vec3> Character::getAreas()
+{
+	std::vector <glm::vec3> ans;
+	ans.push_back(camera->getPosition() - glm::vec3(3.f, 14.f, 5.f));
+	ans.push_back(camera->getPosition() + glm::vec3(3.f, 3.f, 5.f));
+	return ans;
 }

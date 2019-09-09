@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "VertexBufferLayout.h"
+#include "collisions.h"
 
 #include <fstream>
 #include <ctime>
@@ -22,7 +23,7 @@ Game::Game()
 	m_Shader->SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 
 	map = new Map("res/models/buildings/buildings.obj", "res/textures/buildingTexture.jpg");
-	character = new Character("res/models/finn.obj", "res/textures/tlo.jpg");
+	character = new Character("res/models/finn.obj", "res/textures/tlo.jpg", camera);
 }
 Game::~Game()
 {	
@@ -33,7 +34,7 @@ void Game::OnUpdate(float deltaTime)
 void Game::OnRender(Renderer* renderer)
 {
 	map->draw(camera, m_Shader, renderer, fov, nearPlane, farPlane);
-	character->draw(camera, m_Shader, renderer, fov, nearPlane, farPlane);
+	character->draw(m_Shader, renderer, fov, nearPlane, farPlane);
 }
 void Game::Events(GLFWwindow* window)
 {
@@ -46,7 +47,8 @@ void Game::KeyboardEvents(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		camera->move(FORWARD);
-		if (CheckForCollisions())
+		Collision collision(map->getAreas(), character->getAreas());
+		if (collision.isCollision())
 		{
 			camera->move(BACKWARD);
 		}
@@ -54,7 +56,8 @@ void Game::KeyboardEvents(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
 		camera->move(BACKWARD);
-		if (CheckForCollisions())
+		Collision collision(map->getAreas(), character->getAreas());
+		if (collision.isCollision())
 		{
 			camera->move(FORWARD);
 		}
@@ -62,7 +65,8 @@ void Game::KeyboardEvents(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		camera->move(LEFT);
-		if (CheckForCollisions())
+		Collision collision(map->getAreas(), character->getAreas());
+		if (collision.isCollision())
 		{
 			camera->move(RIGHT);
 		}
@@ -70,7 +74,8 @@ void Game::KeyboardEvents(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
 		camera->move(RIGHT);
-		if (CheckForCollisions())
+		Collision collision(map->getAreas(), character->getAreas());
+		if (collision.isCollision())
 		{
 			camera->move(LEFT);
 		}
@@ -94,23 +99,4 @@ void Game::MouseEvents(GLFWwindow* window)
 	//Set last X and Y
 	lastMouseX = mouseX;
 	lastMouseY = mouseY;
-}
-bool Game::CheckForCollisions()
-{
-	glm::vec4 area1a(-0.7f, -0.7f, -0.7f, -0.7f);
-	glm::vec4 area1b(0.7f, 0.7f, 0.7f, 0.7f);
-	glm::vec4 area2a(camera->getPosition(), 1.0f);
-	glm::vec4 area2b(camera->getPosition(), 1.0f);
-
-	if ( (((area1a.x <= area2a.x) && (area2a.x <= area1b.x)) ||
-		((area1a.x <= area2b.x) && (area2b.x <= area1b.x))) &&
-
-		(((area1a.y <= area2a.y) && (area2a.y <= area1b.y)) ||
-		((area1a.y <= area2b.y) && (area2b.y <= area1b.y))) &&
-
-			(((area1a.z <= area2a.z) && (area2a.z <= area1b.z)) ||
-		((area1a.z <= area2b.z) && (area2b.z <= area1b.z))))
-		return true;
-	else
-		return false;
 }
