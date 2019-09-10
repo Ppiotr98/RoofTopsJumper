@@ -3,7 +3,6 @@
 #include "collisions.h"
 
 #include <fstream>
-#include <ctime>
 
 #define TINYOBJLOADER_IMPLEMENTATION // define this in only *one* .cc
 #include "tinyobjloader-2.0-rc1/tiny_obj_loader.h"
@@ -24,7 +23,6 @@ Game::Game()
 
 	map = new Map("res/models/buildings/buildings.obj", "res/textures/buildingTexture.jpg");
 	character = new Character("res/models/finn.obj", "res/textures/tlo.jpg", camera);
-	gravity = new Gravity(0.01f);
 
 	collision = new Collision(map->getAreas(), character->getAreas());
 }
@@ -43,7 +41,7 @@ void Game::Events(GLFWwindow* window)
 {
 	KeyboardEvents(window);
 	MouseEvents(window);
-	gravity->characterFollDown(camera, character, collision);
+	character->follDown(collision);
 	camera->updateInput(-1, mouseOffsetX, mouseOffsetY);
 }
 void Game::KeyboardEvents(GLFWwindow* window)
@@ -83,6 +81,14 @@ void Game::KeyboardEvents(GLFWwindow* window)
 		{
 			camera->move(LEFT);
 		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		character->jump();
+	}
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		camera->setPosition(glm::vec3(0.f, 414.0f, 0.f));
 	}
 }
 void Game::MouseEvents(GLFWwindow* window)

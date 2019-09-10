@@ -1,8 +1,6 @@
 #include "character.h"
 #include "Renderer.h"
 
-#include <ctime>
-
 Character::Character(string modelPath, string texturePath, Camera* m_Camera)
 {
 	GLCall(glEnable(GL_BLEND));
@@ -22,6 +20,7 @@ Character::Character(string modelPath, string texturePath, Camera* m_Camera)
 	characterTexture = std::make_unique<Texture>(texturePath);
 
 	camera = m_Camera;
+	verticalSpeed = 0.f;
 }
 
 Character::~Character()
@@ -57,4 +56,26 @@ std::vector <glm::vec3> Character::getAreas()
 	ans.push_back(camera->getPosition() - glm::vec3(3.f, 14.f, 5.f));
 	ans.push_back(camera->getPosition() + glm::vec3(3.f, 3.f, 5.f));
 	return ans;
+}
+
+void Character::follDown(Collision* collision)
+{
+	if (camera->getPosition().y > -386.f)
+	{
+		verticalSpeed -= 0.03f;
+
+		camera->setPosition(camera->getPosition() + glm::vec3(0.f, verticalSpeed, 0.f));
+		collision->updateAreas2(getAreas());
+		if (collision->isCollision())
+		{
+			camera->setPosition(camera->getPosition() - glm::vec3(0.f, verticalSpeed, 0.f));
+			verticalSpeed = 0.f;
+		}
+	}
+}
+
+void Character::jump()
+{
+	if(verticalSpeed == 0.f)
+		verticalSpeed += 1.5f;
 }

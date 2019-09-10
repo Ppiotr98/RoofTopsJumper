@@ -4,7 +4,6 @@
 #include "Camera.h"
 #include "map.h"
 #include "character.h"
-#include "gravity.h"
 
 class Game
 {
@@ -40,6 +39,5 @@ private:
 
 	Map* map;
 	Character* character;
-	Gravity* gravity;
 	Collision* collision;
 };
