@@ -32,7 +32,7 @@ vector <glm::vec3> Map::createTranslations()
 {
 	unsigned int lastDirection_2 = 1;
 	unsigned int lastDirection_1 = 1;
-	glm::vec3 lastTranslation_1(400.f, 0.f, 0.f);
+	glm::vec3 lastTranslation_1(350.f, 0.f, 0.f);
 	buildingsTranslations.push_back(glm::vec3(0.f, 0.f, 0.f));
 	buildingsTranslations.push_back(lastTranslation_1);
 	srand(time(NULL));
@@ -44,18 +44,18 @@ vector <glm::vec3> Map::createTranslations()
 		{
 		case 0: //left
 			if (lastDirection_1 == 2 || lastDirection_2 == 2)
-				currentTranslation = lastTranslation_1 + glm::vec3(400.f, 0.f, 0.f);
+				currentTranslation = lastTranslation_1 + glm::vec3(350.f, 0.f, 0.f);
 			else
-				currentTranslation = lastTranslation_1 + glm::vec3(0.f, 0.f, -400.f);
+				currentTranslation = lastTranslation_1 + glm::vec3(0.f, 0.f, -350.f);
 			break;
 		case 1: //forward
-			currentTranslation = lastTranslation_1 + glm::vec3(400.f, 0.f, 0.f);
+			currentTranslation = lastTranslation_1 + glm::vec3(350.f, 0.f, 0.f);
 			break;
 		case 2: //right
 			if (lastDirection_1 == 0 || lastDirection_2 == 0)
-				currentTranslation = lastTranslation_1 + glm::vec3(400.f, 0.f, 0.f);
+				currentTranslation = lastTranslation_1 + glm::vec3(350.f, 0.f, 0.f);
 			else
-				currentTranslation = lastTranslation_1 + glm::vec3(0.f, 0.f, 400.f);
+				currentTranslation = lastTranslation_1 + glm::vec3(0.f, 0.f, 350.f);
 			break;
 		}
 
