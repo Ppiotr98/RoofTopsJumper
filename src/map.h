@@ -9,10 +9,10 @@
 class Map
 {
 public:
-	Map(string path, string texturePath);
+	Map(std::string path, std::string texturePath);
 	~Map();
 
-	vector <glm::vec3> createTranslations();
+	std::vector <glm::vec3> createTranslations();
 	void draw(Camera* camera, Shader* shader, Renderer* renderer, float fov, float nearPlane, float farPlane);
 	std::vector <glm::vec3> getAreas();
 private:
@@ -22,5 +22,5 @@ private:
 
 	unsigned int BuildingsVerticesCount;
 
-	vector <glm::vec3> buildingsTranslations;
+	std::vector <glm::vec3> buildingsTranslations;
 };

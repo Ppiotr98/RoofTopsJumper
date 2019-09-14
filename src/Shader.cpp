@@ -5,7 +5,7 @@
 #include <fstream>
 #include <sstream>
 
-Shader::Shader(const string& filepath)
+Shader::Shader(const std::string& filepath)
 	:m_FilePath(filepath), m_RendererID(0)
 {
 	ShaderProgramSource source = ParseShader(filepath);
@@ -16,13 +16,13 @@ Shader::~Shader()
 {
 	GLCall(glDeleteProgram(m_RendererID));
 }
-ShaderProgramSource Shader::ParseShader(const string& filepath)
+ShaderProgramSource Shader::ParseShader(const std::string& filepath)
 {
-	ifstream stream(filepath);
+	std::ifstream stream(filepath);
 
 	if (!stream.is_open())
 	{
-		cout << "Error! Opening Basic.Shader" << endl;
+		std::cout << "Error! Opening Basic.Shader" << std::endl;
 		exit(-1);
 	}
 
@@ -33,16 +33,16 @@ ShaderProgramSource Shader::ParseShader(const string& filepath)
 		FRAGMENT = 1
 	};
 
-	string line;
-	stringstream ss[2];
+	std::string line;
+	std::stringstream ss[2];
 	ShaderType type = ShaderType::NONE;
 	while (getline(stream, line))
 	{
-		if (line.find("#shader") != string::npos)
+		if (line.find("#shader") != std::string::npos)
 		{
-			if (line.find("vertex") != string::npos)
+			if (line.find("vertex") != std::string::npos)
 				type = ShaderType::VERTEX;
-			else if (line.find("fragment") != string::npos)
+			else if (line.find("fragment") != std::string::npos)
 				type = ShaderType::FRAGMENT;
 		}
 		else
@@ -52,7 +52,7 @@ ShaderProgramSource Shader::ParseShader(const string& filepath)
 	return { ss[0].str(), ss[1].str() };
 }
 
-unsigned int Shader::CompileShader(unsigned int type, const string& source)
+unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 {
 	unsigned int id = glCreateShader(type);
 	const char* src = source.c_str();
@@ -67,8 +67,8 @@ unsigned int Shader::CompileShader(unsigned int type, const string& source)
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 		char* message = (char*)_malloca(length * sizeof(char));
 		glGetShaderInfoLog(id, length, &length, message);
-		cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!" << endl;
-		cout << message << endl;
+		std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!" << std::endl;
+		std::cout << message << std::endl;
 		glDeleteShader(id);
 		return 0;
 	}
@@ -76,7 +76,7 @@ unsigned int Shader::CompileShader(unsigned int type, const string& source)
 	return id;
 }
 
-unsigned int Shader::CreateShader(const string& vertexShader, const string& fragmentShader)
+unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 {
 	unsigned int program = glCreateProgram();
 	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
@@ -103,27 +103,27 @@ void Shader::Unbind() const
 	GLCall(glUseProgram(0))
 }
 
-void Shader::SetUniform1i(const string& name, int value)
+void Shader::SetUniform1i(const std::string& name, int value)
 {
 	GLCall(glUniform1i(GetUniformLocation(name), value));
 }
 
-void Shader::SetUniform1f(const string& name, float value)
+void Shader::SetUniform1f(const std::string& name, float value)
 {
 	GLCall(glUniform1f(GetUniformLocation(name), value));
 }
 
-void Shader::SetUniform4f(const string& name, float v0, float v1, float v2, float v3)
+void Shader::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3)
 {
 	GLCall(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
 }
 
-void Shader::SetUniformMath4f(const string& name, const glm::mat4& matrix)
+void Shader::SetUniformMath4f(const std::string& name, const glm::mat4& matrix)
 {
 	GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 }
 
-int Shader::GetUniformLocation(const string& name)
+int Shader::GetUniformLocation(const std::string& name)
 {
 	if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
 		return m_UniformLocationCache[name];
@@ -131,7 +131,7 @@ int Shader::GetUniformLocation(const string& name)
 	GLCall(int location = glGetUniformLocation(m_RendererID, name.c_str()));
 	if (location == -1)
 	{
-		cout << "Warning: uniform '" << name << "' doesn't exist!" << endl;
+		std::cout << "Warning: uniform '" << name << "' doesn't exist!" << std::endl;
 	}
 
 	m_UniformLocationCache[name] = location;

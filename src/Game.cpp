@@ -4,7 +4,7 @@
 
 #include <fstream>
 
-#define TINYOBJLOADER_IMPLEMENTATION // define this in only *one* .cc
+#define TINYOBJLOADER_IMPLEMENTATION
 #include "tinyobjloader-2.0-rc1/tiny_obj_loader.h"
 
 Game::Game()
@@ -15,12 +15,11 @@ Game::Game()
 	nearPlane = 0.1f;
 	farPlane = 5000.f;
 
-	firstMouse = true;
-
 	m_Shader = new Shader("res/shaders/Basic.shader");
 	m_Shader->Bind();
 	m_Shader->SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 
+//	background = new Background("res/textures/background.jpg");
 	map = new Map("res/models/buildings/buildings.obj", "res/textures/buildingTexture.jpg");
 	character = new Character("res/models/finn.obj", "res/textures/tlo.jpg", camera);
 
@@ -34,6 +33,7 @@ void Game::OnUpdate(float deltaTime)
 }
 void Game::OnRender(Renderer* renderer)
 {
+//	background->draw(camera, m_Shader, renderer, fov, nearPlane, farPlane);
 	map->draw(camera, m_Shader, renderer, fov, nearPlane, farPlane);
 	character->draw(m_Shader, renderer, fov, nearPlane, farPlane);
 }
@@ -48,39 +48,19 @@ void Game::KeyboardEvents(GLFWwindow* window)
 {	
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		camera->move(FORWARD);
-		collision->updateAreas2(character->getAreas());
-		if (collision->isCollision())
-		{
-			camera->move(BACKWARD);
-		}
+		character->move(2, collision);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		camera->move(BACKWARD);
-		collision->updateAreas2(character->getAreas());
-		if (collision->isCollision())
-		{
-			camera->move(FORWARD);
-		}
+		character->move(-2, collision);
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		camera->move(LEFT);
-		collision->updateAreas2(character->getAreas());
-		if (collision->isCollision())
-		{
-			camera->move(RIGHT);
-		}
+		character->move(-1, collision);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		camera->move(RIGHT);
-		collision->updateAreas2(character->getAreas());
-		if (collision->isCollision())
-		{
-			camera->move(LEFT);
-		}
+		character->move(1, collision);
 	}
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
@@ -90,23 +70,18 @@ void Game::KeyboardEvents(GLFWwindow* window)
 	{
 		camera->setPosition(glm::vec3(0.f, 414.0f, 0.f));
 	}
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		exit(1);
+	}
 }
 void Game::MouseEvents(GLFWwindow* window)
 {
 	glfwGetCursorPos(window, &mouseX, &mouseY);
 
-	if (firstMouse)
-	{
-		lastMouseX = mouseX;
-		lastMouseY = mouseY;
-		firstMouse = false;
-	}
-
 	//Calc offset
-	mouseOffsetX = mouseX - lastMouseX;
-	mouseOffsetY = lastMouseY - mouseY;
+	mouseOffsetX = mouseX - 960;
+	mouseOffsetY = 540 - mouseY;
 
-	//Set last X and Y
-	lastMouseX = mouseX;
-	lastMouseY = mouseY;
+	glfwSetCursorPos(window, 960, 540);
 }

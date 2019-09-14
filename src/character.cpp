@@ -1,7 +1,7 @@
 #include "character.h"
 #include "Renderer.h"
 
-Character::Character(string modelPath, string texturePath, Camera* m_Camera)
+Character::Character(std::string modelPath, std::string texturePath, Camera* m_Camera)
 {
 	GLCall(glEnable(GL_BLEND));
 	GLCall(glEnable(GL_DEPTH_TEST));
@@ -29,30 +29,36 @@ Character::~Character()
 
 void Character::draw(Shader* shader, Renderer* renderer, float fov, float nearPlane, float farPlane)
 {
-	float distance = -2.5f;
-	float dz = distance * sin(glm::radians(camera->getRotation().y));
-	float dx = distance * (cos(glm::radians(camera->getRotation().y)) - 1);
-	glm::mat4 model2 = glm::translate(glm::mat4(1.0f), camera->getPosition() + glm::vec3(distance + dx, -0.836f, dz));
-	model2 = glm::scale(model2, glm::vec3(0.02f, 0.02f, 0.02f));
-	model2 = glm::rotate(model2, 1.57f - glm::radians(camera->getRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 view2 = camera->getViewMatrix();
-	glm::mat4 projection2 = glm::mat4(1.0f);
-	projection2 = glm::perspective(
-		glm::radians(fov),
-		1920.0f / 1080.0f,
-		nearPlane, farPlane);
-	glm::mat4 mvp2 = projection2 * view2 * model2;
+	glm::mat4 mvp = getMVP(fov, nearPlane, farPlane);
 
 	characterTexture->Bind();
 	shader->SetUniform1i("u_Texture", 0);
-	shader->SetUniformMath4f("u_MVP", mvp2);
+	shader->SetUniformMath4f("u_MVP", mvp);
 
 	renderer->Draw(characterVertexArray, shader, characterVerticesCount);
 }
 
+glm::mat4 Character::getMVP(float fov, float nearPlane, float farPlane)
+{
+	float distance = -2.5f;
+	float dz = distance * sin(glm::radians(camera->getRotation().y));
+	float dx = distance * (cos(glm::radians(camera->getRotation().y)) - 1);
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), camera->getPosition() + glm::vec3(distance + dx, -0.836f, dz));
+	model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
+	model = glm::rotate(model, 1.57f - glm::radians(camera->getRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 view = camera->getViewMatrix();
+	glm::mat4 projection = glm::mat4(1.0f);
+	projection = glm::perspective(
+		glm::radians(fov),
+		1920.0f / 1080.0f,
+		nearPlane, farPlane);
+	glm::mat4 mvp = projection * view * model;
+	return mvp;
+}
+
 std::vector <glm::vec3> Character::getAreas()
 {
-	std::vector <glm::vec3> ans;
+	std::vector <glm::vec3> ans = {};
 	ans.push_back(camera->getPosition() - glm::vec3(3.f, 14.f, 5.f));
 	ans.push_back(camera->getPosition() + glm::vec3(3.f, 3.f, 5.f));
 	return ans;
@@ -78,4 +84,14 @@ void Character::jump()
 {
 	if(verticalSpeed == 0.f)
 		verticalSpeed += 1.5f;
+}
+
+void Character::move(const int direction, Collision* collision)
+{
+	camera->move(direction);
+	collision->updateAreas2(getAreas());
+	if (collision->isCollision())
+	{
+		camera->move(-direction);
+	}
 }

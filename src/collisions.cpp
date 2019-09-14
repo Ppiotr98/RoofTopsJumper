@@ -1,4 +1,5 @@
 #include "collisions.h"
+#include <iostream>
 
 Collision::Collision(std::vector <glm::vec3> m_Areas1, std::vector <glm::vec3> m_Areas2)
 {

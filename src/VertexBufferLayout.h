@@ -1,7 +1,5 @@
 #pragma once
 
-using namespace std;
-
 struct VertexBufferElement
 {
 	unsigned int type;
@@ -21,7 +19,7 @@ struct VertexBufferElement
 
 class VertexBufferLayout
 {
-	vector<VertexBufferElement> m_Elements;
+	std::vector<VertexBufferElement> m_Elements;
 	unsigned int m_Stride;
 public:
 	VertexBufferLayout()
@@ -54,6 +52,6 @@ public:
 		m_Stride += count * VertexBufferElement::GetSizeOfType(GL_UNSIGNED_BYTE);
 	}
 
-	inline const vector<VertexBufferElement> GetElements() const { return m_Elements; }
+	inline const std::vector<VertexBufferElement> GetElements() const { return m_Elements; }
 	inline unsigned int GetStride() const { return m_Stride; }
 };

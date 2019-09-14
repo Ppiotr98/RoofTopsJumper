@@ -3,13 +3,13 @@
 
 #include <ctime>
 
-Map::Map(string modelPath, string texturePath)
+Map::Map(std::string modelPath, std::string texturePath)
 {
 	GLCall(glEnable(GL_BLEND));
 	GLCall(glEnable(GL_DEPTH_TEST));
 	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
-	BuildingsVertexBuffer = new VertexBuffer("res/models/cube.obj");
+	BuildingsVertexBuffer = new VertexBuffer(modelPath);
 	BuildingsVerticesCount = BuildingsVertexBuffer->m_vertices.size() / 5;
 
 	VertexBufferLayout BuildingsVertexLayout;
@@ -19,7 +19,7 @@ Map::Map(string modelPath, string texturePath)
 	BuildingsVertexArray = new VertexArray;
 	BuildingsVertexArray->AddBuffer(BuildingsVertexBuffer, &BuildingsVertexLayout);
 
-	BuildingsTexture = std::make_unique<Texture>("res/textures/buildingTexture.jpg");
+	BuildingsTexture = std::make_unique<Texture>(texturePath);
 
 	buildingsTranslations = createTranslations();
 }
@@ -28,7 +28,7 @@ Map::~Map()
 {
 }
 
-vector <glm::vec3> Map::createTranslations()
+std::vector <glm::vec3> Map::createTranslations()
 {
 	unsigned int lastDirection_2 = 1;
 	unsigned int lastDirection_1 = 1;
@@ -85,9 +85,9 @@ vector <glm::vec3> Map::createTranslations()
 
 void Map::draw(Camera* camera, Shader* shader, Renderer* renderer, float fov, float nearPlane, float farPlane)
 {
-	glm::mat4 view1 = camera->getViewMatrix();
-	glm::mat4 projection1 = glm::mat4(1.0f);
-	projection1 = glm::perspective(
+	glm::mat4 view = camera->getViewMatrix();
+	glm::mat4 projection = glm::mat4(1.0f);
+	projection = glm::perspective(
 		glm::radians(fov),
 		1920.0f / 1080.0f,
 		nearPlane, farPlane);
@@ -95,14 +95,14 @@ void Map::draw(Camera* camera, Shader* shader, Renderer* renderer, float fov, fl
 	BuildingsTexture->Bind(0);
 	shader->SetUniform1i("u_Texture", 0);
 
-	glm::mat4 mvp1;
-	glm::mat4 model1;
+	glm::mat4 mvp;
+	glm::mat4 model;
 	for (int i = 0; i < 100; i++)
 	{
-		model1 = glm::translate(glm::mat4(1.f), buildingsTranslations[i]);
-		model1 = glm::scale(model1, glm::vec3(300.0f, 800.0f, 300.0f));
-		mvp1 = projection1 * view1 * model1;
-		shader->SetUniformMath4f("u_MVP", mvp1);
+		model = glm::translate(glm::mat4(1.f), buildingsTranslations[i]);
+		model = glm::scale(model, glm::vec3(300.0f, 800.0f, 300.0f));
+		mvp = projection * view * model;
+		shader->SetUniformMath4f("u_MVP", mvp);
 		renderer->Draw(BuildingsVertexArray, shader, BuildingsVerticesCount);
 	}
 }
