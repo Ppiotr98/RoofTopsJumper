@@ -9,15 +9,17 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 class VertexBuffer
 {
 
 public:
 	GLuint m_RendererID;
 
-	std::vector <float> m_vertices;
+	vector <float> m_vertices;
 
-	VertexBuffer(std::string path);
+	VertexBuffer(string path);
 	~VertexBuffer();
 
 	void Bind() const;

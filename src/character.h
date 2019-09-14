@@ -10,14 +10,13 @@
 class Character
 {
 public:
-	Character(std::string path, std::string texturePath, Camera* m_Camera);
+	Character(string path, string texturePath, Camera* m_Camera);
 	~Character();
 
 	void draw(Shader* shader, Renderer* renderer, float fov, float nearPlane, float farPlane);
 	std::vector <glm::vec3> getAreas();
 	void follDown(Collision* collision);
 	void jump();
-	void move(const int direction, Collision* collision);
 private:
 	VertexArray* characterVertexArray;
 	VertexBuffer* characterVertexBuffer;
@@ -26,6 +25,4 @@ private:
 
 	Camera* camera;
 	float verticalSpeed;
-
-	glm::mat4 getMVP(float fov, float nearPlane, float farPlane);
 };

@@ -5,7 +5,9 @@
 
 #include "tinyobjloader-2.0-rc1/tiny_obj_loader.h"
 
-VertexBuffer::VertexBuffer(std::string path)
+using namespace std;
+
+VertexBuffer::VertexBuffer(string path)
 {
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;

@@ -4,34 +4,36 @@
 
 #include "glm/glm.hpp"
 
+using namespace std;
+
 struct ShaderProgramSource
 {
-	std::string VertexSource;
-	std::string FragmentSource;
+	string VertexSource;
+	string FragmentSource;
 };
 
 
 class Shader
 {
 private:
-	std::string m_FilePath;
+	string m_FilePath;
 	unsigned int m_RendererID;
-	std::unordered_map<std::string, int> m_UniformLocationCache;
+	unordered_map<string, int> m_UniformLocationCache;
 public:
-	Shader(const std::string& filename);
+	Shader(const string& filename);
 	~Shader();
 
 	void Bind() const;
 	void Unbind() const;
 
 	//set uniforms
-	void SetUniform1i(const std::string& name, int value);
-	void SetUniform1f(const std::string& name, float value);
-	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
-	void SetUniformMath4f(const std::string& name, const glm::mat4& matrix);
+	void SetUniform1i(const string& name, int value);
+	void SetUniform1f(const string& name, float value);
+	void SetUniform4f(const string& name, float v0, float v1, float v2, float v3);
+	void SetUniformMath4f(const string& name, const glm::mat4& matrix);
 private:
-	ShaderProgramSource ParseShader(const std::string& filepath);
-	unsigned int CompileShader(unsigned int type, const std::string& source);
-	unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
-	int GetUniformLocation(const std::string& name);
+	ShaderProgramSource ParseShader(const string& filepath);
+	unsigned int CompileShader(unsigned int type, const string& source);
+	unsigned int CreateShader(const string& vertexShader, const string& fragmentShader);
+	int GetUniformLocation(const string& name);
 };

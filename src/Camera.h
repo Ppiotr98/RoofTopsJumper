@@ -2,10 +2,12 @@
 
 #include<iostream>
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include<GL/glew.h>
+#include<GLFW/glfw3.h>
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+
+enum direction { FORWARD = 0, BACKWARD, LEFT, RIGHT };
 
 class Camera
 {
@@ -23,6 +25,7 @@ private:
 
 	GLfloat rotationX;
 	GLfloat rotationY;
+	GLfloat rotationDis;
 
 	void updateCameraVectors();
 
@@ -43,4 +46,5 @@ public:
 	void move(const int direction);
 	void updateMouseInput(const double& offsetX, const double& offsetY);
 	void updateInput(const int direction, const double& offsetX, const double& offsetY);
+
 };

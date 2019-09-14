@@ -1,5 +1,7 @@
 #include "Game.h"
 
+using namespace std;
+
 GLFWwindow* initWindow()
 {
 	if (!glfwInit())
@@ -10,23 +12,22 @@ GLFWwindow* initWindow()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window;
-
-	window = glfwCreateWindow(1920, 1080, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(1920, 1080, "Hello World", glfwGetPrimaryMonitor(), NULL);
 	if (!window)
 	{
 		glfwTerminate();
 		exit(-1);
 	}
 
-	glfwMakeContextCurrent(window); 
+	glfwMakeContextCurrent(window);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
 	if (glewInit() != GLEW_OK) {
-		std::cout << "glewInit() Error!" << std::endl;
+		cout << "glewInit() Error!" << endl;
 		exit(-1);
 	}
 
-	std::cout << glGetString(GL_VERSION) << std::endl;
+	cout << glGetString(GL_VERSION) << endl;
 
 	return window;
 }
