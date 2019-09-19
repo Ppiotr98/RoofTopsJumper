@@ -1,6 +1,6 @@
 /Debug
 /src/vendor
-/x64
+x64/
 RoofTopsJumper.vcxproj
 RoofTopsJumper.vcxproj.filters
 RoofTopsJumper.vcxproj.user
