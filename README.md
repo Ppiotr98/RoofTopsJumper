@@ -4,12 +4,12 @@ My first simple 3D game
 1. Create empty VS project.
 2. Copy downloaded files.
 3. Include dirs:
-    Dependencies\glew-2.1.0\include
-    Dependencies\GLFW\include
-    src
+    Dependencies\glew-2.1.0\include;
+    Dependencies\GLFW\include;
+    src;
     src\vendor
 4. Lib dirs:
-    Dependencies\glew-2.1.0\lib\Release\Win32
+    Dependencies\glew-2.1.0\lib\Release\Win32;
     Dependencies\GLFW\lib-vc2019
 5. Additional dependencies:
     glew32s.lib;
