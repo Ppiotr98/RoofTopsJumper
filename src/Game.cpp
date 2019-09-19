@@ -90,23 +90,18 @@ void Game::KeyboardEvents(GLFWwindow* window)
 	{
 		camera->setPosition(glm::vec3(0.f, 414.0f, 0.f));
 	}
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		exit(1);
+	}
 }
 void Game::MouseEvents(GLFWwindow* window)
 {
 	glfwGetCursorPos(window, &mouseX, &mouseY);
 
-	if (firstMouse)
-	{
-		lastMouseX = mouseX;
-		lastMouseY = mouseY;
-		firstMouse = false;
-	}
-
 	//Calc offset
-	mouseOffsetX = mouseX - lastMouseX;
-	mouseOffsetY = lastMouseY - mouseY;
+	mouseOffsetX = mouseX - 960;
+	mouseOffsetY = 540 - mouseY;
 
-	//Set last X and Y
-	lastMouseX = mouseX;
-	lastMouseY = mouseY;
+	glfwSetCursorPos(window, 960, 540);
 }
